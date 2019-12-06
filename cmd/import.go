@@ -88,6 +88,8 @@ func downloadFile(filePath string, url string) {
 	}
 	defer out.Close()
 
+	os.Chmod(filePath, 0744)
+
 	// Write the body to file
 	_, err = io.Copy(out, resp.Body)
 
