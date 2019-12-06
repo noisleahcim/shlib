@@ -16,9 +16,9 @@ limitations under the License.
 package cmd
 
 import (
+	"bufio"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -103,10 +103,14 @@ func printModule(filePath string) error {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	defer file.Close()
 
-	content, err := ioutil.ReadAll(file)
-	fmt.Print(content)
-	return err
+	scanner := bufio.NewScanner(file)
+
+	for scanner.Scan() { // internally, it advances token based on sperator
+		fmt.Println(scanner.Text())  // token in unicode-char
+		fmt.Println(scanner.Bytes()) // token in bytes
+	}
+
+	fmt.Println(err)
 }
