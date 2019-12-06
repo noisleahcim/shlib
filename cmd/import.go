@@ -107,7 +107,7 @@ func sourceCode(filePath string) {
 
 	err := cmd.Run()
 
-	fmt.Println(out)
+	fmt.Println(string(out))
 
 	if err != nil {
 		log.Fatal(err)
