@@ -32,7 +32,7 @@ var importCmd = &cobra.Command{
 	Long:  `Long Import CMD Description`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fileUrl := "https://raw.githubusercontent.com/noisleahcim/shlib/master/lib/logging.sh"
-		dirPath := ".shlib~"
+		dirPath := ".shlib"
 		filePath := "logging.sh"
 		fullFilePath := dirPath + "/" + filePath
 
@@ -63,9 +63,12 @@ func init() {
 func createTempModulesDir(dirPath string) error {
 	_, err := os.Stat(dirPath)
 
+	fmt.Println("BeforeDir")
+
 	if os.IsNotExist(err) {
 		os.Mkdir(dirPath, os.ModePerm)
 	}
+	fmt.Println("AfterDir")
 
 	return err
 }
