@@ -72,7 +72,7 @@ func downloadFile(filePath string, url string) error {
 }
 
 func runShellScript(filePath string) error {
-	cmd := exec.Command("/bin/sh", filePath, "&&", "source", filePath)
+	cmd := exec.Command("/bin/sh", filePath, "&&", "source", filePath, "&&", "log_info \"hi\"")
 
 	var out bytes.Buffer
 	var stderr bytes.Buffer
