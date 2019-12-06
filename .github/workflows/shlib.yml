@@ -28,5 +28,9 @@ jobs:
       run: make build
     
   test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      
     - name: Test
       run: make test
