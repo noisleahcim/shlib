@@ -1,5 +1,5 @@
 /*
-Copyright © 2019 NAME HERE <EMAIL ADDRESS>
+Copyright © 2019 Michael Zion noisleahcim@gmail.com
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +16,12 @@ limitations under the License.
 package cmd
 
 import (
+	"bytes"
 	"fmt"
+	"io"
+	"net/http"
+	"os"
+	"os/exec"
 
 	"github.com/spf13/cobra"
 )
@@ -27,20 +32,56 @@ var importCmd = &cobra.Command{
 	Short: "Short Import CMD Description",
 	Long:  `Long Import CMD Description`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("import called")
+		fileUrl := "https://raw.githubusercontent.com/noisleahcim/shlib/master/lib/logging.sh"
+
+		if err := downloadFile("logging.sh", fileUrl); err != nil {
+			panic(err)
+		}
+
+		if err := runShellScript("logging.sh"); err != nil {
+			panic(err)
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(importCmd)
 
-	// Here you will define your flags and configuration settings.
+	importCmd.Flags().BoolP("all", "a", true, "Help message for --all")
+}
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// importCmd.PersistentFlags().String("foo", "", "A help for foo")
+func downloadFile(filePath string, url string) error {
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// importCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// Get the data
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	// Create the file
+	out, err := os.Create(filePath)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+
+	// Write the body to file
+	_, err = io.Copy(out, resp.Body)
+	return err
+}
+
+func runShellScript(filePath string) error {
+	cmd := exec.Command("/bin/sh", "logging.sh")
+
+	var out bytes.Buffer
+	var stderr bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &stderr
+
+	err := cmd.Run()
+	if err != nil {
+		fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
+		return err
+	}
 }
