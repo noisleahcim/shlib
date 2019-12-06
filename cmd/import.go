@@ -75,7 +75,7 @@ func runShellScript(filePath string) error {
 
 	sh, _ := basher.NewContext("/bin/sh", false)
 	sh.Source(filePath, nil)
-	status, err := sh.Run("logging.sh && log_info", os.Args[1:])
+	status, err := sh.Run("./logging.sh && log_info", os.Args[1:])
 	if err != nil {
 		log.Fatal(err)
 	}

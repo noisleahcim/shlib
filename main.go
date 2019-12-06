@@ -15,7 +15,7 @@ limitations under the License.
 */
 package main
 
-import "github.com/noisleahcim/shez/cmd"
+import "github.com/noisleahcim/shlib/cmd"
 
 func main() {
 	cmd.Execute()
