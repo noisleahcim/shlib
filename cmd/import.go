@@ -16,11 +16,12 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
+	"bytes"
 	"io"
-	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
+	"os/exec"
 
 	"github.com/spf13/cobra"
 )
@@ -35,31 +36,24 @@ var importCmd = &cobra.Command{
 	},
 }
 
-func init() {
-	rootCmd.AddCommand(importCmd)
-
-	importCmd.Flags().BoolP("all", "a", true, "Help message for --all")
-}
-
 func importMain() {
+	// variables
 	fileUrl := "https://raw.githubusercontent.com/noisleahcim/shlib/master/lib/logging.sh"
 	dirPath := ".shlib"
 	filePath := "logging.sh"
 	fullFilePath := "./" + dirPath + "/" + filePath
 
+	// main
 	createTempModulesDir(dirPath)
+	downloadFile(fullFilePath, fileUrl)
+	printCode(fullFilePath)
+	deleteTempModulesDir(dirPath)
+}
 
-	if err := downloadFile(fullFilePath, fileUrl); err != nil {
-		panic(err)
-	}
+func init() {
+	rootCmd.AddCommand(importCmd)
 
-	if err := printModule(fullFilePath); err != nil {
-		panic(err)
-	}
-
-	if err := deleteTempModulesDir(dirPath); err != nil {
-		panic(err)
-	}
+	importCmd.Flags().BoolP("all", "a", true, "Help message for --all")
 }
 
 func createTempModulesDir(dirPath string) {
@@ -70,35 +64,44 @@ func createTempModulesDir(dirPath string) {
 	}
 }
 
-func deleteTempModulesDir(dirPath string) error {
+func deleteTempModulesDir(dirPath string) {
 	err := os.RemoveAll(dirPath)
-	return err
+
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
-func downloadFile(filePath string, url string) error {
+func downloadFile(filePath string, url string) {
 
 	// Get the data
 	resp, err := http.Get(url)
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
 	defer resp.Body.Close()
 
 	// Create the file
 	out, err := os.Create(filePath)
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
 	defer out.Close()
 
 	// Write the body to file
 	_, err = io.Copy(out, resp.Body)
-	return err
+
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
-func printModule(filePath string) error {
-	b, err := ioutil.ReadFile(filePath)
-	content := string(b)
-	fmt.Println(content)
-	return err
+func sourceCode(filePath string) {
+	cmd := exec.Command("source", filePath)
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	err := cmd.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
