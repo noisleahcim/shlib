@@ -46,7 +46,7 @@ func importMain() {
 	// main
 	createTempModulesDir(dirPath)
 	downloadFile(fullFilePath, fileUrl)
-	printCode(fullFilePath)
+	sourceCode(fullFilePath)
 	deleteTempModulesDir(dirPath)
 }
 
