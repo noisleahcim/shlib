@@ -27,5 +27,6 @@ jobs:
     - name: Build
       run: make build
     
+  test:
     - name: Test
       run: make test
