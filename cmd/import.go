@@ -71,7 +71,7 @@ func downloadFile(filePath string, url string) error {
 }
 
 func runShellScript(filePath string) error {
-	cmd := exec.Command("/bin/sh", "logging.sh")
+	cmd := exec.Command("/bin/sh", "logging.sh", "&&", "log_info", "hello")
 
 	var out bytes.Buffer
 	var stderr bytes.Buffer
