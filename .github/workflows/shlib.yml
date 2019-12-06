@@ -1,9 +1,9 @@
-name: shlib-cli
+name: shlib
 on: [push]
 jobs:
 
-  build:
-    name: Build
+  cli:
+    name: Build & Test
     runs-on: ubuntu-latest
     steps:
 
@@ -26,11 +26,6 @@ jobs:
 
     - name: Build
       run: make build
-    
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      
+
     - name: Test
       run: make test
