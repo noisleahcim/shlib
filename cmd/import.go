@@ -97,7 +97,8 @@ func downloadFile(filePath string, url string) error {
 }
 
 func printModule(filePath string) error {
-	content, err := ioutil.ReadFile(filePath)
+	b, err := ioutil.ReadFile(filePath)
+	content := string(b)
 	fmt.Println(content)
 	return err
 }
