@@ -31,26 +31,7 @@ var importCmd = &cobra.Command{
 	Short: "Short Import CMD Description",
 	Long:  `Long Import CMD Description`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fileUrl := "https://raw.githubusercontent.com/noisleahcim/shlib/master/lib/logging.sh"
-		dirPath := ".shlib"
-		filePath := "logging.sh"
-		fullFilePath := "./" + dirPath + "/" + filePath
-
-		if err := createTempModulesDir(dirPath); err != nil {
-			panic(err)
-		}
-
-		if err := downloadFile(fullFilePath, fileUrl); err != nil {
-			panic(err)
-		}
-
-		if err := printModule(fullFilePath); err != nil {
-			panic(err)
-		}
-
-		if err := deleteTempModulesDir(dirPath); err != nil {
-			panic(err)
-		}
+		importMain()
 	},
 }
 
@@ -58,6 +39,29 @@ func init() {
 	rootCmd.AddCommand(importCmd)
 
 	importCmd.Flags().BoolP("all", "a", true, "Help message for --all")
+}
+
+func importMain() {
+	fileUrl := "https://raw.githubusercontent.com/noisleahcim/shlib/master/lib/logging.sh"
+	dirPath := ".shlib"
+	filePath := "logging.sh"
+	fullFilePath := "./" + dirPath + "/" + filePath
+
+	if err := createTempModulesDir(dirPath); err != nil {
+		panic(err)
+	}
+
+	if err := downloadFile(fullFilePath, fileUrl); err != nil {
+		panic(err)
+	}
+
+	if err := printModule(fullFilePath); err != nil {
+		panic(err)
+	}
+
+	if err := deleteTempModulesDir(dirPath); err != nil {
+		panic(err)
+	}
 }
 
 func createTempModulesDir(dirPath string) error {
