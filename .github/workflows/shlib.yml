@@ -3,7 +3,7 @@ on: [push]
 jobs:
 
   cli:
-    name: Build & Test
+    name: cli
     runs-on: ubuntu-latest
     steps:
 
