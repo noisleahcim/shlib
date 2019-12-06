@@ -32,12 +32,13 @@ var importCmd = &cobra.Command{
 	Long:  `Long Import CMD Description`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fileUrl := "https://raw.githubusercontent.com/noisleahcim/shlib/master/lib/logging.sh"
+		filePath := "logging.sh"
 
-		if err := downloadFile("logging.sh", fileUrl); err != nil {
+		if err := downloadFile(filePath, fileUrl); err != nil {
 			panic(err)
 		}
 
-		if err := runShellScript("logging.sh"); err != nil {
+		if err := runShellScript(filePath); err != nil {
 			panic(err)
 		}
 	},
@@ -71,7 +72,7 @@ func downloadFile(filePath string, url string) error {
 }
 
 func runShellScript(filePath string) error {
-	cmd := exec.Command("/bin/sh", "logging.sh", "&&", "log_info", "hello")
+	cmd := exec.Command("/bin/sh", filePath, "&&", "source", filePath)
 
 	var out bytes.Buffer
 	var stderr bytes.Buffer
