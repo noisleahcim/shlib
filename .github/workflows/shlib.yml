@@ -1,4 +1,4 @@
-name: shlib
+name: shlib-cli
 on: [push]
 jobs:
 
