@@ -47,9 +47,7 @@ func importMain() {
 	filePath := "logging.sh"
 	fullFilePath := "./" + dirPath + "/" + filePath
 
-	if err := createTempModulesDir(dirPath); err != nil {
-		panic(err)
-	}
+	createTempModulesDir(dirPath)
 
 	if err := downloadFile(fullFilePath, fileUrl); err != nil {
 		panic(err)
@@ -64,14 +62,12 @@ func importMain() {
 	}
 }
 
-func createTempModulesDir(dirPath string) error {
+func createTempModulesDir(dirPath string) {
 	_, err := os.Stat(dirPath)
 
 	if os.IsNotExist(err) {
 		os.Mkdir(dirPath, os.ModePerm)
 	}
-
-	return err
 }
 
 func deleteTempModulesDir(dirPath string) error {
