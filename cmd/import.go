@@ -17,6 +17,7 @@ package cmd
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -103,6 +104,8 @@ func sourceCode(filePath string) {
 
 	var out bytes.Buffer
 	cmd.Stdout = &out
+
+	fmt.Println(cmd.Stdout)
 
 	err := cmd.Run()
 
