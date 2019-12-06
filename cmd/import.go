@@ -16,13 +16,12 @@ limitations under the License.
 package cmd
 
 import (
-	"bytes"
-	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
-	"os/exec"
 
+	"github.com/progrium/go-basher"
 	"github.com/spf13/cobra"
 )
 
@@ -73,16 +72,12 @@ func downloadFile(filePath string, url string) error {
 }
 
 func runShellScript(filePath string) error {
-	cmd := exec.Command("/bin/sh", filePath, "&&", "source", filePath, "&&", "log_info \"hi\"")
-
-	var out bytes.Buffer
-	var stderr bytes.Buffer
-	cmd.Stdout = &out
-	cmd.Stderr = &stderr
-
-	fmt.Println(cmd.Stdout)
-	fmt.Println(cmd.Stderr)
-
-	err := cmd.Run()
+	sh, _ := basher.NewContext("/bin/sh", false)
+	sh.Source(filePath, nil)
+	status, err := sh.Run("main", os.Args[1:])
+	if err != nil {
+		log.Fatal(err)
+	}
+	os.Exit(status)
 	return err
 }
