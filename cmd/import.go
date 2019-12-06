@@ -105,9 +105,9 @@ func sourceCode(filePath string) {
 	var out bytes.Buffer
 	cmd.Stdout = &out
 
-	fmt.Println(cmd.Stdout)
-
 	err := cmd.Run()
+
+	fmt.Println(out)
 
 	if err != nil {
 		log.Fatal(err)
