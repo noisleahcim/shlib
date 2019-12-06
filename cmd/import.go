@@ -17,6 +17,7 @@ package cmd
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -78,6 +79,9 @@ func runShellScript(filePath string) error {
 	var stderr bytes.Buffer
 	cmd.Stdout = &out
 	cmd.Stderr = &stderr
+
+	fmt.Println(cmd.Stdout)
+	fmt.Println(cmd.Stderr)
 
 	err := cmd.Run()
 	return err
