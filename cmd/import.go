@@ -16,12 +16,13 @@ limitations under the License.
 package cmd
 
 import (
+	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 
-	"github.com/progrium/go-basher"
 	"github.com/spf13/cobra"
 )
 
@@ -32,13 +33,23 @@ var importCmd = &cobra.Command{
 	Long:  `Long Import CMD Description`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fileUrl := "https://raw.githubusercontent.com/noisleahcim/shlib/master/lib/logging.sh"
+		dirPath := ".shlib~"
 		filePath := "logging.sh"
+		fullFilePath := dirPath + "/" + filePath
 
-		if err := downloadFile(filePath, fileUrl); err != nil {
+		if err := createTempModulesDir(dirPath); err != nil {
 			panic(err)
 		}
 
-		if err := runShellScript(filePath); err != nil {
+		if err := downloadFile(fullFilePath, fileUrl); err != nil {
+			panic(err)
+		}
+
+		if err := printModule(fullFilePath); err != nil {
+			panic(err)
+		}
+
+		if err := deleteTempModulesDir(dirPath); err != nil {
 			panic(err)
 		}
 	},
@@ -48,6 +59,21 @@ func init() {
 	rootCmd.AddCommand(importCmd)
 
 	importCmd.Flags().BoolP("all", "a", true, "Help message for --all")
+}
+
+func createTempModulesDir(dirPath string) error {
+	_, err := os.Stat(dirPath)
+
+	if os.IsNotExist(err) {
+		os.Mkdir(dirPath, os.ModeDir)
+	}
+
+	return err
+}
+
+func deleteTempModulesDir(dirPath string) error {
+	err := os.RemoveAll(dirPath)
+	return err
 }
 
 func downloadFile(filePath string, url string) error {
@@ -71,14 +97,16 @@ func downloadFile(filePath string, url string) error {
 	return err
 }
 
-func runShellScript(filePath string) error {
+func printModule(filePath string) error {
+	file, err := os.Open(filePath)
 
-	sh, _ := basher.NewContext("/bin/sh", false)
-	sh.Source(filePath, nil)
-	status, err := sh.Run("./logging.sh && log_info", os.Args[1:])
 	if err != nil {
 		log.Fatal(err)
 	}
-	os.Exit(status)
+
+	defer file.Close()
+
+	content, err := ioutil.ReadAll(file)
+	fmt.Print(content)
 	return err
 }
