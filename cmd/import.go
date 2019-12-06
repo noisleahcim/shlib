@@ -65,7 +65,7 @@ func createTempModulesDir(dirPath string) error {
 	_, err := os.Stat(dirPath)
 
 	if os.IsNotExist(err) {
-		os.Mkdir(dirPath, 0744)
+		os.Mkdir(dirPath, os.ModePerm)
 	}
 
 	return err
