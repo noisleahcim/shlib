@@ -97,7 +97,7 @@ func downloadFile(filePath string, url string) {
 }
 
 func sourceCode(filePath string) {
-	cmd := exec.Command("/bin/sh", "-c", "source", filePath)
+	cmd := exec.Command("/bin/sh", "-c", filePath, "&&", "log_info 'bla'")
 
 	var out bytes.Buffer
 	cmd.Stdout = &out
